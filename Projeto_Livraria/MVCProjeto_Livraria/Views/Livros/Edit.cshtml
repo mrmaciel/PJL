@@ -1,0 +1,99 @@
+﻿@model MVCProjeto_Livraria.Models.MvcLivroModel
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edição</h2>
+
+@using (Html.BeginForm("Edit", "Livros", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4></h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(model => model.ISBNID)
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NOME, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NOME, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.NOME, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AUTOR, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AUTOR, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AUTOR, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PRECO, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.PRECO, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PRECO, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DTPUBLIC, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.DTPUBLIC, "{0:dd/MM/yyyy}")                
+                @Html.ValidationMessageFor(model => model.DTPUBLIC, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IMGCAPA, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+
+                @if (Model.IMGCAPA == null)
+                {
+                    @Html.DisplayFor(model => model.IMGCAPA)
+                }
+                else
+                {
+                    var base64 = Convert.ToBase64String(Model.IMGCAPA);
+                    var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                    <img src='@imgSrc' style="max-width:100px; max-height:100px;" />                      
+                }
+                
+                <input type="file" name="imagemUpload" />
+                @Html.ValidationMessageFor(model => model.IMGCAPA, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Gravar" class="btn btn-default" />
+                @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-default" })
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Voltar à Listagem", "Index")
+</div>
+
+
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval");
+
+    <script type="text/javascript">
+    $(function() {
+        $('#PRECO').maskMoney({ prefix: 'R$ ', allowNegative: false, thousands: '.', decimal: ',', affixesStay: false });
+    });
+    </script>
+   
+}

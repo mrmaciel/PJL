@@ -1,0 +1,118 @@
+﻿@model PagedList.IPagedList<MVCProjeto_Livraria.Models.MvcLivroModel>
+@using PagedList;
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<h2>Livros</h2>
+
+
+<body>
+
+
+
+    <p>
+        @Html.ActionLink("Novo Livro", "AddorEdit", "Livros", new { @class = "btn btn-success" })
+    </p>
+    <p>
+        <b>
+        </b>
+    </p>
+
+
+
+    @using (Html.BeginForm("Index", "Livros", FormMethod.Get, new { enctype = "multipart/form-data" }))
+    {
+
+    <p>
+        <b>Pesquisar por: &nbsp;</b>
+        @Html.RadioButton("procurarpor", "ISBN", true)<text>ISBN</text>&nbsp;
+        @Html.RadioButton("procurarpor", "NOME")<text>Nome</text>&nbsp;
+        @Html.RadioButton("procurarpor", "AUTOR")<text>Autor</text>&nbsp;
+        @Html.RadioButton("procurarpor", "PRECO")<text>Preço</text>&nbsp;
+        @Html.RadioButton("procurarpor", "DTPUBLIC")<text>Data da Publicação</text>&nbsp;
+        <br />
+
+        @Html.TextBox("Busca", ViewBag.CurrentFilter as string)&nbsp;<input type="submit" value="Pesquisar" class="btn btn-default" height="10"/>&nbsp;
+        @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-default" })
+
+    </p>
+        
+
+    }
+
+    <table class="table table-striped">
+        <thread class="table-heading">
+            <tr>
+                <th>@Html.ActionLink("ISBN", "Index", new { sOrdem = ViewBag.ISBN, filtroCorrente = ViewBag.CurrentFilter })</th>
+                <th>@Html.ActionLink("NOME", "Index", new { sOrdem = ViewBag.NOME, filtroCorrente = ViewBag.CurrentFilter })</th>
+                <th>@Html.ActionLink("AUTOR", "Index", new { sOrdem = ViewBag.AUTOR, filtroCorrente = ViewBag.CurrentFilter })</th>
+                <th>@Html.ActionLink("PREÇO", "Index", new { sOrdem = ViewBag.PRECO, filtroCorrente = ViewBag.CurrentFilter })</th>
+                <th>@Html.ActionLink("DATA DA PUBLICAÇÃO", "Index", new { sOrdem = ViewBag.DTPUBLIC, filtroCorrente = ViewBag.CurrentFilter })</th>
+                <th>CAPA</th>
+                <th>OPÇÕES</th>
+            </tr>
+        </thread>
+
+        @if (Model.Count() == 0)
+        {
+            <tr>
+                <td colspan="4">Não existem itens cadastrados para esta consulta.</td>
+            </tr>
+        }
+        else
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ISBNID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NOME)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AUTOR)
+                    </td>
+                    <td>                        
+                        @Html.DisplayFor(modelItem => item.PRECO)
+                    </td>
+                    <td>
+                        @item.DTPUBLIC.ToString("dd/MM/yyyy")
+                    </td>
+                    @if (item.IMGCAPA != null)
+                    {
+                        <td>
+                            @{
+                                var base64 = Convert.ToBase64String(item.IMGCAPA);
+                                var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                            }
+                            <img src='@imgSrc' style="max-width:100px; max-height:100px;" />
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IMGCAPA)
+                        </td>
+                    }
+                    <td>
+                        @Html.ActionLink("Editar", "Edit", new { id = item.ISBNID }) |
+                        @Html.ActionLink("Detalhes", "Details", new { id = item.ISBNID }) |
+                        @Html.ActionLink("Excluir", "Delete", new { id = item.ISBNID })
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+</body>
+
+Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sOrdem = ViewBag.CurrentSort, filtroCorrente = ViewBag.CurrentFilter }))

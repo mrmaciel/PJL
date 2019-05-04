@@ -1,0 +1,76 @@
+﻿@model MVCProjeto_Livraria.Models.MvcLivroModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Detalhes</h2>
+
+<div>
+    <h4></h4>
+    <hr />
+    <dl class="dl-horizontal" display="flex" flex-flow="row wrap">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ISBNID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ISBNID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NOME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NOME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AUTOR)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AUTOR)
+        </dd>
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PRECO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PRECO)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DTPUBLIC)
+        </dt>
+
+        <dd>
+            @Model.DTPUBLIC.ToString("dd/MM/yyyy")
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IMGCAPA)
+        </dt>
+
+        <dd>
+            @if (Model.IMGCAPA == null)
+            {
+                @Html.DisplayFor(model => model.IMGCAPA)
+            }
+            else
+            {
+                var base64 = Convert.ToBase64String(Model.IMGCAPA);
+                var imgSrc = String.Format("data:image/jpg;base64,{0}", base64);
+                <img src='@imgSrc' style="max-width:100px; max-height:100px;" />
+            }
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.ISBNID }) |
+    @Html.ActionLink("Voltar à Listagem", "Index")
+</p>
